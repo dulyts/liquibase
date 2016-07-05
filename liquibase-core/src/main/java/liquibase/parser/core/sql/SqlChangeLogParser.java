@@ -24,7 +24,7 @@ public class SqlChangeLogParser implements ChangeLogParser {
     public int getPriority() {
         return PRIORITY_DEFAULT;
     }
-    
+
     @Override
     public DatabaseChangeLog parse(String physicalChangeLogLocation, ChangeLogParameters changeLogParameters, ResourceAccessor resourceAccessor) throws ChangeLogParseException {
 
@@ -36,9 +36,9 @@ public class SqlChangeLogParser implements ChangeLogParser {
         try {
             InputStream sqlStream = StreamUtil.singleInputStream(physicalChangeLogLocation, resourceAccessor);
             if (sqlStream == null) {
-                throw new ChangeLogParseException("File does not exist: "+physicalChangeLogLocation);
+                throw new ChangeLogParseException("File does not exist: " + physicalChangeLogLocation);
             }
-            String sql = StreamUtil.getStreamContents(sqlStream, null);
+            String sql = StreamUtil.getStreamContents(sqlStream, null).replaceAll("\r\n/\r\n", "\r\n//\r\n");
             change.setSql(sql);
         } catch (IOException e) {
             throw new ChangeLogParseException(e);
